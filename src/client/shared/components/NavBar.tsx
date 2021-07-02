@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const NavBar = (): JSX.Element => {
   const classes = useStyles();
   return (
-    <div className="flex">
+    <div className="flexgrow">
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -28,7 +28,7 @@ const NavBar = (): JSX.Element => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className="flex">
+          <Typography variant="h6" className="flexgrow">
             My App
           </Typography>
           <Button color="inherit" href="/login">

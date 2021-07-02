@@ -1,9 +1,25 @@
 /* Structure and layout */
-.flex {
+.flexgrow {
   flex-grow: 1;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexcolumn {
+  flex-direction: column;
+}
+
+.aligncenter {
+  align-items: center;
 }
 
 /* Margin and padding classes */
 .mr16 {
   margin-right: 16px;
+}
+
+.mt16 {
+  margin-top: 16px;
 }

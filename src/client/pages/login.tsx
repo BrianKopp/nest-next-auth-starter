@@ -1,5 +1,11 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core';
+import {
+  Card,
+  CardContent,
+  Container,
+  makeStyles,
+  Theme,
+} from '@material-ui/core';
 import { getLoggedOutUserServerSideProps } from '../shared/utils/get-logged-in-user';
 import NavBar from '../shared/components/NavBar';
 
@@ -16,7 +22,13 @@ const Login = (): JSX.Element => {
   return (
     <>
       <NavBar />
-      <p>Need to log in</p>
+      <div className="flex flexcolumn aligncenter mt16">
+        <Card raised>
+          <CardContent>
+            <p>Do something</p>
+          </CardContent>
+        </Card>
+      </div>
     </>
   );
 };
