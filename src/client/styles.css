@@ -15,11 +15,41 @@
   align-items: center;
 }
 
+.jc {
+  justify-content: center;
+}
+
 /* Margin and padding classes */
 .mr16 {
   margin-right: 16px;
 }
 
+.mt8 {
+  margin-top: 8px;
+}
+
 .mt16 {
   margin-top: 16px;
+}
+
+/* padding */
+.p16 {
+  padding: 16px;
+}
+
+.p8 {
+  padding: 8px;
+}
+
+.pb0 {
+  padding-bottom: 0px;
+}
+
+.pt0 {
+  padding-top: 0px;
+}
+
+/* Sizing */
+.w100 {
+  width: 100%;
 }
