@@ -1,5 +1,5 @@
 export const getLoggedInUser = (req): any => {
-  const user = req.session?.get('user');
+  const user = req.user;
   console.log('checking the user session', user);
   return user || null;
 };
