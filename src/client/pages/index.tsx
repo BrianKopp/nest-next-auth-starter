@@ -5,7 +5,7 @@ interface Props {
 }
 
 export const getServerSideProps = async function ({ req }) {
-  const user = req.session.get('user');
+  const user = req.session?.get('user');
   console.log('checking the user session', user);
   if (!user) {
     console.log('user session not found, zoinks!');
