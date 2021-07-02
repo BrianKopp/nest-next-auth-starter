@@ -1,0 +1,9 @@
+/* Structure and layout */
+.flex {
+  flex-grow: 1;
+}
+
+/* Margin and padding classes */
+.mr16 {
+  margin-right: 16px;
+}

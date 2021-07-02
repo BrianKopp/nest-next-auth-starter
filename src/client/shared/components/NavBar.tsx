@@ -1,5 +1,14 @@
 import React from 'react';
-import { makeStyles, Theme } from '@material-ui/core';
+import {
+  AppBar,
+  Button,
+  IconButton,
+  makeStyles,
+  Theme,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   someClass: {},
@@ -7,7 +16,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const NavBar = (): JSX.Element => {
   const classes = useStyles();
-  return <p>NavBar works</p>;
+  return (
+    <div className="flex">
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton
+            edge="start"
+            className="mr16"
+            color="inherit"
+            aria-label="menu"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className="flex">
+            My App
+          </Typography>
+          <Button color="inherit" href="/login">
+            Login
+          </Button>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 };
 
 export default NavBar;

@@ -1,24 +1,12 @@
 import React, { FunctionComponent } from 'react';
+import { getLoggedInUserServerSideProps } from '../shared/utils/get-logged-in-user';
 
 interface Props {
   user: any;
 }
 
-export const getServerSideProps = async function ({ req }) {
-  const user = req.session?.get('user');
-  console.log('checking the user session', user);
-  if (!user) {
-    console.log('user session not found, zoinks!');
-    return {
-      redirect: {
-        destination: '/public',
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { user },
-  };
+export const getServerSideProps = async function (context) {
+  return getLoggedInUserServerSideProps(context);
 };
 
 const Home: FunctionComponent<Props> = ({ user }) => {

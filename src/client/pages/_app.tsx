@@ -1,5 +1,9 @@
 import React from 'react';
 import Head from 'next/head';
+import '../styles.css';
+import { ThemeProvider } from '@material-ui/styles';
+import { CssBaseline } from '@material-ui/core';
+import theme from '../theme';
 
 const MyApp = (props) => {
   const { Component, pageProps } = props;
@@ -19,7 +23,10 @@ const MyApp = (props) => {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <Component {...pageProps} />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
     </React.Fragment>
   );
 };
