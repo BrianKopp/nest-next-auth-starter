@@ -5,12 +5,11 @@ import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthController } from './controllers/auth.controller';
 import { SessionService } from './services/session.service';
-import { AuthenticatedGuard } from './guards/authenticated.guard';
 
 @Module({
-  imports: [UserModule, PassportModule],
+  imports: [UserModule, PassportModule.register({ session: true })],
   providers: [AuthService, LocalStrategy, SessionService],
   controllers: [AuthController],
-  exports: [AuthenticatedGuard],
+  exports: [],
 })
 export class AuthModule {}
