@@ -13,5 +13,5 @@
     "incremental": true,
     "jsx": "preserve"
   },
-  "include": ["src/server/**/*.ts"]
+  "include": ["src/server/**/*.ts", "src/shared/**/*.ts"]
 }
