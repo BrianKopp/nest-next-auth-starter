@@ -3,7 +3,6 @@ import Router from 'next/router';
 import {
   Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   makeStyles,
@@ -12,7 +11,8 @@ import {
 } from '@material-ui/core';
 import { getLoggedOutUserServerSideProps } from '../shared/utils/get-logged-in-user';
 import NavBar from '../shared/components/NavBar';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { PasswordRequirementRegexes, PasswordRequirements } from '../../shared';
 
 export const getServerSideProps = async function (context) {
   return getLoggedOutUserServerSideProps(context);
@@ -34,7 +34,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 const Register = (): JSX.Element => {
   const classes = useStyles();
   const [disabled, setDisabled] = useState(false);
-  const { handleSubmit, register } = useForm<FormData>();
+  // const disabled = false;
+  const { handleSubmit, control } = useForm<FormData>();
+  const [updateValidationErrors, setUpdateValidationErrors] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<PasswordRequirements[]>();
+  const [passwordsNotMatch, setPasswordsNotMatch] = useState(false);
 
   const onClickRegister = (data) => {
     setDisabled(true);
@@ -48,12 +52,18 @@ const Register = (): JSX.Element => {
         username: data.email,
       }),
     })
-      .then((response) => {
-        if (response.status !== 200) {
-          console.error('error registering', response.status, response.statusText);
-          throw new Error('Error registering');
+      .then(async (response) => {
+        if (response.status === 400) {
+          const json = await response.json();
+          const { message } = json;
+          console.error('error message', message);
+          throw new Error(message);
         }
-        return response.json();
+        if (response.status !== 200) {
+          throw new Error('unexpected error');
+        }
+        // else it's 200
+        return await response.json();
       })
       .then((responseJson) => {
         console.log('successfully logged in!', responseJson);
@@ -61,10 +71,11 @@ const Register = (): JSX.Element => {
       })
       .catch((err) => {
         console.error('error registering', err);
-        setDisabled(true);
+        setDisabled(false);
       });
   };
 
+  // return <p>Hello world</p>;
   return (
     <>
       <NavBar />
@@ -74,45 +85,97 @@ const Register = (): JSX.Element => {
           <CardContent className={classes.card}>
             <form noValidate onSubmit={handleSubmit(onClickRegister)}>
               <div>
-                <TextField
-                  required
-                  fullWidth
-                  disabled={disabled}
-                  {...register('email')}
-                  id="email"
+                <Controller
                   name="email"
-                  label="Email Address"
-                  placeholder="someone@example.com"
-                  autoComplete="email"
-                  autoFocus
+                  control={control}
+                  defaultValue=""
+                  rules={{
+                    required: true,
+                    pattern: {
+                      value: /^\S+@\S+\.\S+$/i,
+                      message: 'must be an email like <text>@<text>.<text>',
+                    },
+                  }}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      required
+                      fullWidth
+                      autoFocus
+                      disabled={disabled}
+                      id="email"
+                      name="email"
+                      label="Email Address"
+                      placeholder="someone@example.com"
+                      autoComplete="email"
+                      onChange={onChange}
+                      value={value}
+                      error={!!error}
+                      helperText={error?.message}
+                    />
+                  )}
                 />
               </div>
               <div className="mt8">
-                <TextField
-                  required
-                  fullWidth
-                  disabled={disabled}
-                  {...register('password')}
-                  className="mt16"
-                  id="password"
+                <Controller
                   name="password"
-                  label="Password"
-                  type="password"
-                  autoComplete="current-password"
+                  control={control}
+                  defaultValue=""
+                  rules={{
+                    required: true,
+                    validate: (value) => {
+                      for (const key in PasswordRequirementRegexes) {
+                        if (!value.match(PasswordRequirementRegexes[key])) {
+                          return 'Length (8-24). Require upper, lower, symbol, and number';
+                        }
+                      }
+
+                      return false;
+                    },
+                    // minLength: { value: 8, message: 'must be between 8-24 characters' },
+                    // maxLength: { value: 24, message: 'must be between 8-24 characters' },
+                    // pattern: { value: PasswordRequirementRegexes[Password], message: 'must include a symbol and number' }
+                  }}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      required
+                      fullWidth
+                      disabled={disabled}
+                      id="password"
+                      label="Password"
+                      type="password"
+                      autoComplete="password"
+                      value={value}
+                      onChange={onChange}
+                      error={!!error}
+                      helperText={error?.message}
+                    />
+                  )}
                 />
               </div>
               <div className="mt8">
-                <TextField
-                  required
-                  fullWidth
-                  disabled={disabled}
-                  {...register('confirmPassword')}
-                  className="mt16"
-                  id="confirmPassword"
+                <Controller
                   name="confirmPassword"
-                  label="Confirm Password"
-                  type="password"
-                  autoComplete="confirm-password"
+                  control={control}
+                  defaultValue=""
+                  rules={{
+                    required: true,
+                    minLength: { value: 8, message: 'password must have at least 8 characters' },
+                  }}
+                  render={({ field: { onChange, value }, fieldState: { error } }) => (
+                    <TextField
+                      required
+                      fullWidth
+                      disabled={disabled}
+                      id="confirmPassword"
+                      label="Confirm Password"
+                      type="password"
+                      autoComplete="confirm-password"
+                      value={value}
+                      onChange={onChange}
+                      error={!!error}
+                      helperText={error?.message}
+                    />
+                  )}
                 />
               </div>
               <div className="flex flexcolumn mt16">
