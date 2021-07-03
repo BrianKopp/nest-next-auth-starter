@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { UserEmailVerification } from './user-email-verification.entity';
 import { UserPasswordHistory } from './user-password-history.entity';
+import { UserPasswordReset } from './user-password-reset.entity';
 
 @Entity()
 @Unique('username', ['username'])
@@ -49,4 +50,7 @@ export class User {
 
   @ManyToOne(() => UserEmailVerification, (uev) => uev.user)
   emailVerifications?: UserEmailVerification[];
+
+  @ManyToOne(() => UserPasswordReset, (pr) => pr.user)
+  passwordResets?: UserPasswordReset[];
 }

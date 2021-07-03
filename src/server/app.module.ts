@@ -8,6 +8,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { User } from './entities/user.entity';
 import { UserPasswordHistory } from './entities/user-password-history.entity';
+import { UserEmailVerification } from './entities/user-email-verification.entity';
+import { UserPasswordReset } from './entities/user-password-reset.entity';
 
 @Module({
   imports: [
@@ -18,7 +20,12 @@ import { UserPasswordHistory } from './entities/user-password-history.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [User, UserPasswordHistory],
+      entities: [
+        User,
+        UserPasswordHistory,
+        UserEmailVerification,
+        UserPasswordReset,
+      ],
       synchronize: true,
     }),
     MailerModule.forRoot({
