@@ -112,4 +112,30 @@ export class UserDataService {
       .where('v.id = :id', { id: result.identifiers[0].id })
       .getOneOrFail();
   }
+
+  async getVerification(uuid: string) {
+    return await this.verifications
+      .createQueryBuilder('v')
+      .innerJoinAndSelect('v.user', 'u')
+      .where('v.id = :id', { id: uuid })
+      .getOneOrFail();
+  }
+
+  async markUserVerified(uuid: string) {
+    const user = await this.getUserByUuid(uuid);
+    user.emailVerified = true;
+    await this.users.save(user);
+    console.log('marked user as verified', user.id);
+    await this.verifications.delete({
+      user,
+    });
+    console.log('deleted user verifications for user', user.id);
+  }
+
+  async getUserByUuid(uuid: string) {
+    return this.users
+      .createQueryBuilder('u')
+      .where('u.uuid = :uuid', { uuid })
+      .getOneOrFail();
+  }
 }

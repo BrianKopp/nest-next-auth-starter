@@ -2,8 +2,12 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   HttpCode,
+  ParseUUIDPipe,
   Post,
+  Query,
+  Redirect,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -43,5 +47,14 @@ export class AuthController {
     user.hashedPassword = await this.authService.hashPassword(
       registerDto.password,
     );
+  }
+
+  @Get('verify')
+  @Redirect('https://example.com/') // or whatever home is
+  async verifyEmail(
+    @Query('u', ParseUUIDPipe) userId: string,
+    @Query('v', ParseUUIDPipe) verificationId: string,
+  ) {
+    await this.users.verifyEmail(userId, verificationId);
   }
 }

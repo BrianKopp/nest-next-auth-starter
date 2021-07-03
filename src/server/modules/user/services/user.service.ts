@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/server/entities/user.entity';
 import { UserDataService } from './user-data.service';
 import { UserEmailsService } from './user-emails.service';
@@ -26,5 +26,13 @@ export class UserService {
     await this.emails.sendEmailVerification(savedVerification);
 
     return newUser;
+  }
+
+  async verifyEmail(userUuid: string, verificationUuid: string) {
+    const verification = await this.userData.getVerification(verificationUuid);
+    if (verification.user.uuid !== userUuid) {
+      throw new NotFoundException('unexpected verification id');
+    }
+    await this.userData.markUserVerified(userUuid);
   }
 }
