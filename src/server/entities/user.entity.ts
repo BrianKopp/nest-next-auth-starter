@@ -33,7 +33,7 @@ export class User {
   @UpdateDateColumn()
   updateDate: Date;
 
-  @Column({ type: 'bit', default: false })
+  @Column({ default: false })
   emailVerified: boolean;
 
   @Column()
