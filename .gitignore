@@ -36,3 +36,6 @@ lerna-debug.log*
 # Ignore Next.js caches
 src/client/.next
 .next
+
+# Ignore postgres volume mount
+.data
