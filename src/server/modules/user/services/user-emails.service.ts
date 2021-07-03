@@ -9,8 +9,9 @@ export class UserEmailsService {
 
   async sendEmailVerification(verification: UserEmailVerification): Promise<void> {
     const urlBase = this.config.get('URL_BASE');
+    const verifyPath = this.config.get('EMAIL_VERIFY_PATH');
     const appName = this.config.get('APP_NAME');
-    const verificationUrl = `${urlBase}/api/auth/email-verification?u=${verification.user.uuid}&v=${verification.id}`;
+    const verificationUrl = `${urlBase}${verifyPath}?u=${verification.user.uuid}&v=${verification.id}`;
     await this.mailer.sendMail({
       to: verification.user.email,
       subject: `Welcome to ${appName}`,
