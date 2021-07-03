@@ -44,7 +44,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           preview: configService.get('ENVIRONMENT') === 'local',
           transport: configService.get('EMAIL_TRANSPORT'),
           template: {
-            dir: join(__dirname, 'emails'),
+            dir: join(process.cwd(), 'emails'),
             adapter: new HandlebarsAdapter(),
             options: {
               strict: true,
