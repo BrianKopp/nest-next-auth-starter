@@ -8,11 +8,5 @@ export class RegisterDTO {
   email: string;
 
   @IsString()
-  firstName: string;
-
-  @IsString()
-  lastName: string;
-
-  @IsString()
   password: string;
 }

@@ -13,8 +13,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { User } from 'src/server/entities/user.entity';
-import { PasswordResetDTO } from 'src/shared/auth/password-reset.dto';
-import { RegisterDTO } from 'src/shared/auth/register.dto';
+import { RegisterDTO, PasswordResetDTO } from 'src/shared';
 import { UserService } from '../../user/services/user.service';
 import { LocalAuthGuard } from '../guards/local.guard';
 import { AuthService } from '../services/auth.service';
@@ -46,8 +45,6 @@ export class AuthController {
     const user = new User();
     user.email = registerDto.email;
     user.username = registerDto.username;
-    user.firstName = registerDto.firstName;
-    user.lastName = registerDto.lastName;
     user.hashedPassword = await this.authService.hashPassword(registerDto.password);
   }
 

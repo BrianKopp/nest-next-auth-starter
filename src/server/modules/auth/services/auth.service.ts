@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/server/entities/user.entity';
-import { PasswordResetDTO } from 'src/shared/auth/password-reset.dto';
+import { PasswordRequirementRegexes, PasswordRequirements, PasswordResetDTO } from 'src/shared';
 import { UserService } from '../../user/services/user.service';
+import { PasswordNotMeetCriteriaError } from '../errors/password-not-meet-criteria.error';
 
 @Injectable()
 export class AuthService {
@@ -38,9 +39,14 @@ export class AuthService {
       return false;
     }
 
-    const criteriaRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
-    if (!password.match(criteriaRegex)) {
-      return false;
+    const validationErrors: PasswordRequirements[] = [];
+    for (const key in PasswordRequirementRegexes) {
+      if (!password.match(PasswordRequirementRegexes[key])) {
+        validationErrors.push(key as PasswordRequirements);
+      }
+    }
+    if (validationErrors.length) {
+      throw new PasswordNotMeetCriteriaError(validationErrors);
     }
 
     return true;
