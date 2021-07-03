@@ -15,10 +15,7 @@ export class AuthService {
       return null;
     }
 
-    const passwordMatches = await this.comparePassword(
-      user.hashedPassword,
-      password,
-    );
+    const passwordMatches = await this.comparePassword(user.hashedPassword, password);
     if (!passwordMatches) {
       console.info('user password not match', user.id);
       return null;
@@ -31,20 +28,16 @@ export class AuthService {
     return await bcrypt.hash(password, salt);
   }
 
-  async comparePassword(
-    hashedPassword: string,
-    compareToPassword: string,
-  ): Promise<boolean> {
+  async comparePassword(hashedPassword: string, compareToPassword: string): Promise<boolean> {
     return await bcrypt.compare(compareToPassword, hashedPassword);
   }
 
-  async doesPasswordMeetCriteria(password: string): Promise<boolean> {
+  doesPasswordMeetCriteria(password: string): boolean {
     if (!password || typeof password !== 'string') {
       return false;
     }
 
-    const criteriaRegex =
-      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+    const criteriaRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
     if (!password.match(criteriaRegex)) {
       return false;
     }

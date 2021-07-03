@@ -5,10 +5,7 @@ import { UserEmailsService } from './user-emails.service';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private userData: UserDataService,
-    private emails: UserEmailsService,
-  ) {}
+  constructor(private userData: UserDataService, private emails: UserEmailsService) {}
 
   async getUser(lookup: string): Promise<User> {
     return await this.userData.getUser(lookup);
@@ -19,10 +16,7 @@ export class UserService {
 
     const now = new Date();
     const expirationDate = new Date(now.setMonth(now.getMonth() + 1));
-    const savedVerification = await this.userData.createEmailVerification(
-      user,
-      expirationDate,
-    );
+    const savedVerification = await this.userData.createEmailVerification(user, expirationDate);
     await this.emails.sendEmailVerification(savedVerification);
 
     return newUser;
