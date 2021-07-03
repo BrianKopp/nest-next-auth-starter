@@ -6,9 +6,12 @@ import { UserPasswordHistory } from 'src/server/entities/user-password-history.e
 import { UserService } from './services/user.service';
 import { UserEmailsService } from './services/user-emails.service';
 import { UserEmailVerification } from 'src/server/entities/user-email-verification.entity';
+import { UserPasswordReset } from '../../entities/user-password-reset.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserPasswordHistory, UserEmailVerification])],
+  imports: [
+    TypeOrmModule.forFeature([User, UserPasswordHistory, UserEmailVerification, UserPasswordReset]),
+  ],
   providers: [UserDataService, UserService, UserEmailsService],
   exports: [UserService],
 })
