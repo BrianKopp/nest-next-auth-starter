@@ -20,12 +20,7 @@ const NavBar = (): JSX.Element => {
     <div className="flexgrow">
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className="mr16"
-            color="inherit"
-            aria-label="menu"
-          >
+          <IconButton edge="start" className="mr16" color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className="flexgrow">
