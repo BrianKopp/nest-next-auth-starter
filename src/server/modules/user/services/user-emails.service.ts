@@ -6,9 +6,7 @@ import { UserEmailVerification } from 'src/server/entities/user-email-verificati
 export class UserEmailsService {
   constructor(private mailer: MailerService) {}
 
-  async sendEmailVerification(
-    verification: UserEmailVerification,
-  ): Promise<void> {
+  async sendEmailVerification(verification: UserEmailVerification): Promise<void> {
     const verificationUrl = `https://example.com/api/auth/email-verification?u=${verification.user.uuid}&v=${verification.id}`;
     await this.mailer.sendMail({
       to: verification.user.email,

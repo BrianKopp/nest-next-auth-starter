@@ -9,10 +9,7 @@ export class SessionService extends PassportSerializer {
     done(null, JSON.stringify(user));
   }
 
-  deserializeUser(
-    payload: any,
-    done: (err: Error, payload: string) => void,
-  ): any {
+  deserializeUser(payload: any, done: (err: Error, payload: string) => void): any {
     // trivially deserialize the user
     console.log('deserializing the user', payload);
     done(null, JSON.parse(payload));

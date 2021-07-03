@@ -48,11 +48,7 @@ const Login = (): JSX.Element => {
           throw new Error('error logging in');
         }
         if (response.status !== 200) {
-          console.error(
-            'unexpected non 200 response',
-            response.status,
-            response.statusText,
-          );
+          console.error('unexpected non 200 response', response.status, response.statusText);
           throw new Error('error logging in');
         }
         return response.json();
@@ -104,12 +100,7 @@ const Login = (): JSX.Element => {
               </div>
               <div className="flex flexcolumn mt16">
                 <div className="flex jc">
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    disabled={disabled}
-                  >
+                  <Button type="submit" variant="contained" color="primary" disabled={disabled}>
                     Login
                   </Button>
                 </div>

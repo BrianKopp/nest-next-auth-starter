@@ -20,12 +20,7 @@ import { UserPasswordReset } from './entities/user-password-reset.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [
-        User,
-        UserPasswordHistory,
-        UserEmailVerification,
-        UserPasswordReset,
-      ],
+      entities: [User, UserPasswordHistory, UserEmailVerification, UserPasswordReset],
       synchronize: true,
     }),
     MailerModule.forRoot({
