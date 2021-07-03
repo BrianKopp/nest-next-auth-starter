@@ -11,8 +11,9 @@ export class UserEmailsService {
     await this.mailer.sendMail({
       to: verification.user.email,
       subject: 'Welcome to Example Service!',
-      template: 'welcome',
+      template: './welcome',
       context: {
+        appName: 'Some app',
         username: verification.user.username,
         verificationUrl,
       },
