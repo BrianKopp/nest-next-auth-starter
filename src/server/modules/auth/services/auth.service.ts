@@ -1,22 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../../user/user.service';
+import * as bcrypt from 'bcrypt';
+import { User } from 'src/server/entities/user.entity';
+import { UserDataService } from '../../user/services/user-data.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private users: UserService) {}
+  constructor(private users: UserDataService) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.users.findOne(email);
-    if (!user) {
-      console.error('could not find user', email);
+  async validateUser(username: string, password: string): Promise<any> {
+    let user: User;
+    try {
+      user = await this.users.getUser(username);
+    } catch (err) {
       return null;
     }
 
-    if (user.password !== pass) {
-      console.error('invalid password');
+    const passwordMatches = await this.comparePassword(
+      user.hashedPassword,
+      password,
+    );
+    if (!passwordMatches) {
+      console.info('user password not match', user.id);
       return null;
     }
-    const { password, ...rest } = user;
-    return rest;
+    return user.id;
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
+  }
+
+  async comparePassword(
+    hashedPassword: string,
+    compareToPassword: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(compareToPassword, hashedPassword);
   }
 }
