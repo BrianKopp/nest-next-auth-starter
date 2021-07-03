@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
 import { ViewsModule } from './modules/views/views.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UserPasswordHistory } from './entities/user-password-history.entity';
 
@@ -17,6 +20,18 @@ import { UserPasswordHistory } from './entities/user-password-history.entity';
       database: 'postgres',
       entities: [User, UserPasswordHistory],
       synchronize: true,
+    }),
+    MailerModule.forRoot({
+      defaults: {
+        from: '"noreply" <noreply@example.com>',
+      },
+      template: {
+        dir: join(join(__dirname, 'templates')),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
     AuthModule,
     UserModule,
