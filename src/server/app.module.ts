@@ -27,16 +27,17 @@ import { UserPasswordReset } from './entities/user-password-reset.entity';
       defaults: {
         from: '"noreply" <noreply@example.com>',
       },
+      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
       template: {
-        dir: join(join(__dirname, 'templates')),
+        dir: join(__dirname, 'templates'),
         adapter: new HandlebarsAdapter(),
         options: {
           strict: true,
         },
       },
     }),
-    AuthModule,
     UserModule,
+    AuthModule,
     ViewsModule,
   ],
   controllers: [],
