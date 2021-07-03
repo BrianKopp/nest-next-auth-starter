@@ -7,6 +7,7 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserEmailVerification } from './user-email-verification.entity';
 import { UserPasswordHistory } from './user-password-history.entity';
 
 @Entity()
@@ -15,6 +16,9 @@ import { UserPasswordHistory } from './user-password-history.entity';
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ generated: 'uuid' })
+  uuid: string;
 
   @Column()
   username: string;
@@ -34,12 +38,15 @@ export class User {
   @Column()
   hashedPassword: string;
 
-  @ManyToOne(() => UserPasswordHistory, (ph) => ph.user)
-  oldPasswords?: UserPasswordHistory[];
-
   @Column({ nullable: true })
   firstName?: string;
 
   @Column({ nullable: true })
   lastName?: string;
+
+  @ManyToOne(() => UserPasswordHistory, (ph) => ph.user)
+  oldPasswords?: UserPasswordHistory[];
+
+  @ManyToOne(() => UserEmailVerification, (uev) => uev.user)
+  emailVerifications?: UserEmailVerification[];
 }
