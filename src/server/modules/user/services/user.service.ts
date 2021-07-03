@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserPasswordReset } from 'src/server/entities/user-password-reset.entity';
 import { User } from 'src/server/entities/user.entity';
 import { UserDataService } from './user-data.service';
 import { UserEmailsService } from './user-emails.service';
@@ -23,10 +24,22 @@ export class UserService {
   }
 
   async verifyEmail(userUuid: string, verificationUuid: string) {
-    const verification = await this.userData.getVerification(verificationUuid);
+    const verification = await this.userData.getVerification(verificationUuid, new Date());
     if (verification.user.uuid !== userUuid) {
       throw new NotFoundException('unexpected verification id');
     }
     await this.userData.markUserVerified(userUuid);
+  }
+
+  async getPasswordReset(resetId: string): Promise<UserPasswordReset> {
+    return await this.userData.getPasswordReset(resetId);
+  }
+
+  async getPreviousPasswords(userId: number) {
+    return await this.userData.getPasswordHistory(userId);
+  }
+
+  async consumePasswordReset(resetId: string, userId: number, newPasswordHash: string) {
+    await this.userData.resetUserPassword(userId, resetId, newPasswordHash);
   }
 }
