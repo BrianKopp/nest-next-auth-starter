@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Router from 'next/router';
 import {
   Button,
@@ -35,10 +35,9 @@ const Register = (): JSX.Element => {
   const classes = useStyles();
   const [disabled, setDisabled] = useState(false);
   // const disabled = false;
-  const { handleSubmit, control } = useForm<FormData>();
-  const [updateValidationErrors, setUpdateValidationErrors] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<PasswordRequirements[]>();
-  const [passwordsNotMatch, setPasswordsNotMatch] = useState(false);
+  const { handleSubmit, control, watch } = useForm<FormData>();
+  const password = useRef({});
+  password.current = watch('password', '');
 
   const onClickRegister = (data) => {
     setDisabled(true);
@@ -129,11 +128,8 @@ const Register = (): JSX.Element => {
                         }
                       }
 
-                      return false;
+                      return true;
                     },
-                    // minLength: { value: 8, message: 'must be between 8-24 characters' },
-                    // maxLength: { value: 24, message: 'must be between 8-24 characters' },
-                    // pattern: { value: PasswordRequirementRegexes[Password], message: 'must include a symbol and number' }
                   }}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <TextField
@@ -159,7 +155,7 @@ const Register = (): JSX.Element => {
                   defaultValue=""
                   rules={{
                     required: true,
-                    minLength: { value: 8, message: 'password must have at least 8 characters' },
+                    validate: (value) => value === password.current || 'passwords do not match',
                   }}
                   render={({ field: { onChange, value }, fieldState: { error } }) => (
                     <TextField
