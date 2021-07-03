@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -6,7 +6,7 @@ export class UserPasswordHistory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => User, (user) => user.oldPasswords)
+  @ManyToOne(() => User, (user) => user.oldPasswords, { onDelete: 'CASCADE' })
   user: User;
 
   @Column()

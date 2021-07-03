@@ -2,7 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -45,12 +45,12 @@ export class User {
   @Column({ nullable: true })
   lastName?: string;
 
-  @ManyToOne(() => UserPasswordHistory, (ph) => ph.user)
+  @OneToMany(() => UserPasswordHistory, (ph) => ph.user)
   oldPasswords?: UserPasswordHistory[];
 
-  @ManyToOne(() => UserEmailVerification, (uev) => uev.user)
+  @OneToMany(() => UserEmailVerification, (uev) => uev.user)
   emailVerifications?: UserEmailVerification[];
 
-  @ManyToOne(() => UserPasswordReset, (pr) => pr.user)
+  @OneToMany(() => UserPasswordReset, (pr) => pr.user)
   passwordResets?: UserPasswordReset[];
 }

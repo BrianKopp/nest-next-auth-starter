@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
 @Entity()
@@ -6,7 +6,7 @@ export class UserEmailVerification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany(() => User, (user) => user.emailVerifications)
+  @ManyToOne(() => User, (user) => user.emailVerifications, { onDelete: 'CASCADE' })
   user: User;
 
   @CreateDateColumn()
