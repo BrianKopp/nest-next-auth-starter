@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/server/entities/user.entity';
 import { PasswordRequirementRegexes, PasswordRequirements } from 'src/shared';
-import { PasswordResetDTO } from '../../../dtos';
+import { PasswordResetDTO, RegisterDTO } from '../../../dtos';
 import { UserService } from '../../user/services/user.service';
 import { PasswordNotMeetCriteriaError } from '../errors/password-not-meet-criteria.error';
 
@@ -75,5 +75,19 @@ export class AuthService {
     }
 
     await this.users.consumePasswordReset(reset.id, reset.user.id, hashedPassword);
+  }
+
+  async registerUser(registerDto: RegisterDTO) {
+    if (!this.doesPasswordMeetCriteria(registerDto.password)) {
+      console.info('password does not meet criteria');
+      throw new BadRequestException('password does not meet criteria');
+    }
+
+    const user = new User();
+    user.email = registerDto.email;
+    user.username = registerDto.username;
+    user.hashedPassword = await this.hashPassword(registerDto.password);
+
+    return await this.users.createUser(user);
   }
 }

@@ -37,15 +37,7 @@ export class AuthController {
   @Post('register')
   @HttpCode(200)
   async register(@Body() registerDto: RegisterDTO) {
-    if (!this.authService.doesPasswordMeetCriteria(registerDto.password)) {
-      console.info('password does not meet criteria');
-      throw new BadRequestException('password does not meet criteria');
-    }
-
-    const user = new User();
-    user.email = registerDto.email;
-    user.username = registerDto.username;
-    user.hashedPassword = await this.authService.hashPassword(registerDto.password);
+    await this.authService.registerUser(registerDto);
   }
 
   @Get('verify')
