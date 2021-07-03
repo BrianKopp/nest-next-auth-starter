@@ -82,6 +82,7 @@ export class UserDataService {
       prevPassword.hashedPassword = user.hashedPassword;
       prevPassword.user = user;
       await queryRunner.manager.insert(UserPasswordHistory, prevPassword);
+      await queryRunner.commitTransaction();
     } catch (err) {
       console.error('an error occurred inserting a user', err);
       throw err;
@@ -99,12 +100,8 @@ export class UserDataService {
     const verif = new UserEmailVerification();
     verif.user = user;
     verif.expiresDate = expirationDate;
-    const result = await this.verifications.insert(verif);
-    return await this.verifications
-      .createQueryBuilder('v')
-      .innerJoinAndSelect('v.user', 'user')
-      .where('v.id = :id', { id: result.identifiers[0].id })
-      .getOneOrFail();
+    await this.verifications.insert(verif);
+    return verif;
   }
 
   async getVerification(uuid: string, now: Date) {
@@ -142,12 +139,12 @@ export class UserDataService {
       .getOneOrFail();
   }
 
-  async createPasswordReset(user: User, expirationDate: Date) {
+  async createPasswordReset(user: User, expirationDate: Date): Promise<UserPasswordReset> {
     const pr = new UserPasswordReset();
     pr.user = user;
     pr.expirationDate = expirationDate;
-    const result = await this.passwordResets.insert(pr);
-    return await this.getPasswordReset(result.identifiers[0].id);
+    await this.passwordResets.insert(pr);
+    return pr;
   }
 
   async resetUserPassword(userId: number, resetId: string, newPasswordHash: string) {
@@ -166,6 +163,7 @@ export class UserDataService {
       prevPassword.hashedPassword = user.hashedPassword;
       prevPassword.user = user;
       await queryRunner.manager.insert(UserPasswordHistory, prevPassword);
+      await queryRunner.commitTransaction();
       console.log('updated user password', user.id);
     } catch (err) {
       console.error('an error occurred updating user password', err, user.id, resetId);
