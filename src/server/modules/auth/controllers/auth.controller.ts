@@ -23,6 +23,11 @@ import { AuthService } from '../services/auth.service';
 export class AuthController {
   constructor(private authService: AuthService, private users: UserService) {}
 
+  @Get()
+  async health() {
+    return { message: 'ok' };
+  }
+
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
