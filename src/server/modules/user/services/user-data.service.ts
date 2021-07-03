@@ -1,15 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UserEmailVerification } from 'src/server/entities/user-email-verification.entity';
 import { UserPasswordHistory } from 'src/server/entities/user-password-history.entity';
 import { User } from 'src/server/entities/user.entity';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { Connection, EntityNotFoundError, Repository } from 'typeorm';
 
 @Injectable()
 export class UserDataService {
   constructor(
+    private rawConnection: Connection,
     @InjectRepository(User) private users: Repository<User>,
     @InjectRepository(UserPasswordHistory)
     private oldPasswords: Repository<UserPasswordHistory>,
+    @InjectRepository(UserEmailVerification)
+    private verifications: Repository<UserEmailVerification>,
   ) {}
 
   async getUser(lookup: string): Promise<User> {
@@ -73,10 +77,39 @@ export class UserDataService {
   }
 
   async insertUser(user: User): Promise<User> {
-    await this.users.insert(user);
+    const queryRunner = this.rawConnection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.insert(User, user);
+      const prevPassword = new UserPasswordHistory();
+      prevPassword.hashedPassword = user.hashedPassword;
+      prevPassword.user = user;
+      await queryRunner.manager.insert(UserPasswordHistory, prevPassword);
+    } catch (err) {
+      console.error('an error occurred inserting a user', err);
+    } finally {
+      await queryRunner.release();
+    }
+
     const newUser = await this.getUser(user.username);
     const { hashedPassword, ...rest } = newUser;
     console.log('created user in database', rest);
     return newUser;
+  }
+
+  async createEmailVerification(
+    user: User,
+    expirationDate: Date,
+  ): Promise<UserEmailVerification> {
+    const verif = new UserEmailVerification();
+    verif.user = user;
+    verif.expiresDate = expirationDate;
+    const result = await this.verifications.insert(verif);
+    return await this.verifications
+      .createQueryBuilder('v')
+      .innerJoinAndSelect('v.user', 'user')
+      .where('v.id = :id', { id: result.identifiers[0].id })
+      .getOneOrFail();
   }
 }
