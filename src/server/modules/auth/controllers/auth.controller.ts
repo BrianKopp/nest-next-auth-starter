@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -11,8 +10,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { User } from 'src/server/entities/user.entity';
 import { RegisterDTO, PasswordResetDTO } from '../../../dtos';
 import { UserService } from '../../user/services/user.service';
 import { LocalAuthGuard } from '../guards/local.guard';
@@ -20,7 +19,11 @@ import { AuthService } from '../services/auth.service';
 
 @Controller('api/v1/auth')
 export class AuthController {
-  constructor(private authService: AuthService, private users: UserService) {}
+  constructor(
+    private authService: AuthService,
+    private users: UserService,
+    private config: ConfigService,
+  ) {}
 
   @Get()
   async health() {
@@ -41,12 +44,15 @@ export class AuthController {
   }
 
   @Get('verify')
-  @Redirect('https://example.com/') // or whatever home is
+  @Redirect()
   async verifyEmail(
     @Query('u', ParseUUIDPipe) userId: string,
     @Query('v', ParseUUIDPipe) verificationId: string,
   ) {
     await this.users.verifyEmail(userId, verificationId);
+    const baseUrl = this.config.get('URL_BASE');
+    const redirectPath = this.config.get('EMAIL_VERIFY_REDIRECT_PATH');
+    return { url: `${baseUrl}${redirectPath}` };
   }
 
   @Post('password-reset')

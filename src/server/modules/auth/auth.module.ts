@@ -5,9 +5,10 @@ import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { AuthController } from './controllers/auth.controller';
 import { SessionService } from './services/session.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [UserModule, PassportModule.register({ session: true })],
+  imports: [ConfigModule, UserModule, PassportModule.register({ session: true })],
   providers: [AuthService, LocalStrategy, SessionService],
   controllers: [AuthController],
   exports: [],
