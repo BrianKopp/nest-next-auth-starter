@@ -3,6 +3,8 @@ import { ViewsModule } from './modules/views/views.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { UserPasswordHistory } from './entities/user-password-history.entity';
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'postgres',
       database: 'postgres',
-      entities: [],
+      entities: [User, UserPasswordHistory],
       synchronize: true,
     }),
     AuthModule,
