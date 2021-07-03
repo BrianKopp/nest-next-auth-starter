@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/server/entities/user.entity';
-import { UserDataService } from '../../user/services/user-data.service';
+import { UserService } from '../../user/services/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private users: UserDataService) {}
+  constructor(private users: UserService) {}
 
   async validateUser(username: string, password: string): Promise<any> {
     let user: User;
@@ -36,5 +36,19 @@ export class AuthService {
     compareToPassword: string,
   ): Promise<boolean> {
     return await bcrypt.compare(compareToPassword, hashedPassword);
+  }
+
+  async doesPasswordMeetCriteria(password: string): Promise<boolean> {
+    if (!password || typeof password !== 'string') {
+      return false;
+    }
+
+    const criteriaRegex =
+      /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+    if (!password.match(criteriaRegex)) {
+      return false;
+    }
+
+    return true;
   }
 }
