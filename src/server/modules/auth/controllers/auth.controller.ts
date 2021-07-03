@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { User } from 'src/server/entities/user.entity';
-import { RegisterDTO, PasswordResetDTO } from 'src/shared';
+import { RegisterDTO, PasswordResetDTO } from '../../../dtos';
 import { UserService } from '../../user/services/user.service';
 import { LocalAuthGuard } from '../guards/local.guard';
 import { AuthService } from '../services/auth.service';

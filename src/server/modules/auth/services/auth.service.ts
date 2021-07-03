@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/server/entities/user.entity';
-import { PasswordRequirementRegexes, PasswordRequirements, PasswordResetDTO } from 'src/shared';
+import { PasswordRequirementRegexes, PasswordRequirements } from 'src/shared';
+import { PasswordResetDTO } from '../../../dtos';
 import { UserService } from '../../user/services/user.service';
 import { PasswordNotMeetCriteriaError } from '../errors/password-not-meet-criteria.error';
 
