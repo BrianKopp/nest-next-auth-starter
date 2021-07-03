@@ -71,4 +71,12 @@ export class UserDataService {
       .limit(5)
       .getMany();
   }
+
+  async insertUser(user: User): Promise<User> {
+    await this.users.insert(user);
+    const newUser = await this.getUser(user.username);
+    const { hashedPassword, ...rest } = newUser;
+    console.log('created user in database', rest);
+    return newUser;
+  }
 }
