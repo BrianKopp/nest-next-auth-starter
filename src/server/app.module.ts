@@ -17,6 +17,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
           type: 'postgres',
@@ -32,6 +33,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         const fromName = configService.get('EMAIL_FROM_NAME', 'noreply');
         const fromEmail = configService.get('EMAIL_FROM_ADDRESS');

@@ -39,3 +39,6 @@ src/client/.next
 
 # Ignore postgres volume mount
 .data
+
+# Ignore .env files
+.env
