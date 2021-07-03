@@ -18,7 +18,7 @@ export const getServerSideProps = async function (context) {
 };
 
 interface FormData {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -79,12 +79,12 @@ const Login = (): JSX.Element => {
                   required
                   fullWidth
                   disabled={disabled}
-                  {...register('email')}
-                  id="email"
-                  name="email"
-                  label="Email Address"
-                  placeholder="someone@example.com"
-                  autoComplete="email"
+                  {...register('username')}
+                  id="username"
+                  name="username"
+                  label="Username (or email)"
+                  placeholder="someone"
+                  autoComplete="username"
                   autoFocus
                 />
               </div>

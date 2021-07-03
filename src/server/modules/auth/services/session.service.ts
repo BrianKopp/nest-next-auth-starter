@@ -5,6 +5,7 @@ import { PassportSerializer } from '@nestjs/passport';
 export class SessionService extends PassportSerializer {
   serializeUser(user: any, done: (err: Error, user: any) => void): any {
     // trivially serialize the thing
+    console.log('serializing the user', user);
     done(null, JSON.stringify(user));
   }
 
@@ -13,6 +14,7 @@ export class SessionService extends PassportSerializer {
     done: (err: Error, payload: string) => void,
   ): any {
     // trivially deserialize the user
+    console.log('deserializing the user', payload);
     done(null, JSON.parse(payload));
   }
 }
