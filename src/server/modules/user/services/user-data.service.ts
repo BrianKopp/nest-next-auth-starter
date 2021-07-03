@@ -108,7 +108,7 @@ export class UserDataService {
     const qb = this.verifications.createQueryBuilder('v');
     qb.innerJoinAndSelect('v.user', 'u');
     qb.where('v.id = :id', { id: uuid });
-    qb.andWhere('v.expirationDate > :now', { now });
+    qb.andWhere('v.expiresDate > :now', { now });
     return await qb.getOneOrFail();
   }
 
