@@ -4,7 +4,6 @@ import {
   Controller,
   Get,
   HttpCode,
-  NotFoundException,
   ParseUUIDPipe,
   Post,
   Query,
@@ -59,26 +58,6 @@ export class AuthController {
   @Post('password-reset')
   @HttpCode(200)
   async resetPassword(@Body() passwordResetDTO: PasswordResetDTO) {
-    const { userId, passwordResetId, newPassword } = passwordResetDTO;
-
-    const reset = await this.users.getPasswordReset(passwordResetId);
-    if (reset.user.uuid !== userId) {
-      throw new NotFoundException();
-    }
-
-    if (!this.authService.doesPasswordMeetCriteria(newPassword)) {
-      console.info('new password does not meet criteria');
-      throw new BadRequestException('password does not meet criteria');
-    }
-
-    const hashedPassword = await this.authService.hashPassword(newPassword);
-    const prevHashedPasswords = await this.users.getPreviousPasswords(reset.user.id);
-    for (const prev of prevHashedPasswords) {
-      if (prev.hashedPassword === hashedPassword) {
-        throw new BadRequestException('password cannot match last 5 previous passwords');
-      }
-    }
-
-    await this.users.
+    await this.authService.resetUserPassword(passwordResetDTO);
   }
 }

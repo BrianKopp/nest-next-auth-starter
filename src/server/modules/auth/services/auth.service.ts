@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/server/entities/user.entity';
+import { PasswordResetDTO } from 'src/shared/auth/password-reset.dto';
 import { UserService } from '../../user/services/user.service';
 
 @Injectable()
@@ -43,5 +44,29 @@ export class AuthService {
     }
 
     return true;
+  }
+
+  async resetUserPassword(pwReset: PasswordResetDTO) {
+    const { userId, passwordResetId, newPassword } = pwReset;
+
+    const reset = await this.users.getPasswordReset(passwordResetId);
+    if (reset.user.uuid !== userId) {
+      throw new NotFoundException();
+    }
+
+    if (!this.doesPasswordMeetCriteria(newPassword)) {
+      console.info('new password does not meet criteria');
+      throw new BadRequestException('password does not meet criteria');
+    }
+
+    const hashedPassword = await this.hashPassword(newPassword);
+    const prevHashedPasswords = await this.users.getPreviousPasswords(reset.user.id);
+    for (const prev of prevHashedPasswords) {
+      if (prev.hashedPassword === hashedPassword) {
+        throw new BadRequestException('password cannot match last 5 previous passwords');
+      }
+    }
+
+    await this.users.consumePasswordReset(reset.id, reset.user.id, hashedPassword);
   }
 }
