@@ -41,8 +41,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           defaults: {
             from: `"${fromName}" <${fromEmail}>`,
           },
-          preview: configService.get('ENVIRONMENT') === 'local',
-          transport: configService.get('EMAIL_TRANSPORT'),
+          preview: false,
+          transport: {
+            host: configService.get('EMAIL_SMTP_HOST'),
+            port: configService.get<number>('EMAIL_SMTP_PORT'),
+            logger: true,
+            debug: true,
+            auth: {
+              user: configService.get('EMAIL_SMTP_USER'),
+              pass: configService.get('EMAIL_SMTP_PASSWORD'),
+            },
+          },
           template: {
             dir: join(process.cwd(), 'emails'),
             adapter: new HandlebarsAdapter(),
