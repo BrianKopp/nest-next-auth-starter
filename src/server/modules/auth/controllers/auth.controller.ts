@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   ParseUUIDPipe,
   Post,
   Query,
@@ -12,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
-import { RegisterDTO, PasswordResetDTO } from '../../../dtos';
+import { RegisterDTO, PasswordResetRequestDTO } from '../../../dtos';
 import { UserService } from '../../user/services/user.service';
 import { AuthenticatedGuard } from '../guards/authenticated.guard';
 import { LocalAuthGuard } from '../guards/local.guard';
@@ -81,5 +82,12 @@ export class AuthController {
   @HttpCode(200)
   async resetPassword(@Body() passwordResetDTO: PasswordResetDTO) {
     await this.authService.resetUserPassword(passwordResetDTO);
+  }
+
+  @Post('password-reset/:id/cancel')
+  @HttpCode(200)
+  async cancelPasswordReset(@Param('id') id: string) {
+    await this.authService.cancelPasswordReset(id);
+    return { message: 'password reset cancelled' };
   }
 }

@@ -147,6 +147,10 @@ export class UserDataService {
     return pr;
   }
 
+  async cancelPasswordReset(id: string) {
+    await this.passwordResets.delete(id);
+  }
+
   async resetUserPassword(userId: number, resetId: string, newPasswordHash: string) {
     const user = await this.getUserById(userId);
     const pwReset = await this.passwordResets.findOneOrFail(resetId);

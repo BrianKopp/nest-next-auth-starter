@@ -31,6 +31,10 @@ export class UserService {
     await this.userData.markUserVerified(userUuid);
   }
 
+  async cancelPasswordReset(id: string) {
+    return await this.userData.cancelPasswordReset(id);
+  }
+
   async getPasswordReset(resetId: string): Promise<UserPasswordReset> {
     return await this.userData.getPasswordReset(resetId);
   }

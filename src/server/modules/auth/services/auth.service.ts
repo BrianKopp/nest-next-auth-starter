@@ -53,6 +53,10 @@ export class AuthService {
     return true;
   }
 
+  async cancelPasswordReset(id: string) {
+    await this.users.cancelPasswordReset(id);
+  }
+
   async resetUserPassword(pwReset: PasswordResetDTO) {
     const { userId, passwordResetId, newPassword } = pwReset;
 
