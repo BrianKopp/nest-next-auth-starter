@@ -31,6 +31,15 @@ export class UserService {
     await this.userData.markUserVerified(userUuid);
   }
 
+  async createPasswordReset(username: string): Promise<UserPasswordReset> {
+    const user = await this.userData.getUser(username);
+    const now = new Date();
+    const expirationDate = new Date(now.setMonth(now.getMonth() + 1));
+    const reset = await this.userData.createPasswordReset(user, expirationDate);
+    await this.emails.sendPasswordReset(reset);
+    return reset;
+  }
+
   async cancelPasswordReset(id: string) {
     return await this.userData.cancelPasswordReset(id);
   }

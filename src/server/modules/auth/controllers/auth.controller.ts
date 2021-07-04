@@ -80,8 +80,8 @@ export class AuthController {
 
   @Post('password-reset')
   @HttpCode(200)
-  async resetPassword(@Body() passwordResetDTO: PasswordResetDTO) {
-    await this.authService.resetUserPassword(passwordResetDTO);
+  async resetPassword(@Body() passwordResetRequestDTO: PasswordResetRequestDTO) {
+    await this.authService.requestPasswordReset(passwordResetRequestDTO);
   }
 
   @Post('password-reset/:id/cancel')

@@ -2,6 +2,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { UserEmailVerification } from 'src/server/entities/user-email-verification.entity';
+import { UserPasswordReset } from 'src/server/entities/user-password-reset.entity';
 
 @Injectable()
 export class UserEmailsService {
@@ -20,6 +21,23 @@ export class UserEmailsService {
         appName,
         username: verification.user.username,
         verificationUrl,
+      },
+    });
+  }
+
+  async sendPasswordReset(reset: UserPasswordReset): Promise<void> {
+    const urlBase = this.config.get('URL_BASE');
+    const passwordResetPath = '/password-reset';
+    const appName = this.config.get('APP_NAME');
+    const resetUrl = `${urlBase}${passwordResetPath}?u=${reset.user.uuid}&v=${reset.id}`;
+    await this.mailer.sendMail({
+      to: reset.user.email,
+      subject: `Reset password for ${appName}`,
+      template: './passwordreset',
+      context: {
+        appName,
+        username: reset.user.username,
+        resetUrl,
       },
     });
   }
