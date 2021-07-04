@@ -18,6 +18,7 @@ export class UserService {
     const now = new Date();
     const expirationDate = new Date(now.setMonth(now.getMonth() + 1));
     const savedVerification = await this.userData.createEmailVerification(user, expirationDate);
+    await this.emails.sendWelcomeMessage(newUser);
     await this.emails.sendEmailVerification(savedVerification);
 
     return newUser;

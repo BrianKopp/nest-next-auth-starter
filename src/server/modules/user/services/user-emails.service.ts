@@ -1,12 +1,23 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { UserEmailVerification } from 'src/server/entities/user-email-verification.entity';
-import { UserPasswordReset } from 'src/server/entities/user-password-reset.entity';
+import { User, UserEmailVerification, UserPasswordReset } from 'src/server/entities';
 
 @Injectable()
 export class UserEmailsService {
   constructor(private mailer: MailerService, private config: ConfigService) {}
+
+  async sendWelcomeMessage(user: User): Promise<void> {
+    const appName = this.config.get('APP_NAME');
+    await this.mailer.sendMail({
+      to: user.email,
+      subject: `Welcome to ${appName}`,
+      template: './welcome',
+      context: {
+        appName,
+      },
+    });
+  }
 
   async sendEmailVerification(verification: UserEmailVerification): Promise<void> {
     const urlBase = this.config.get('URL_BASE');
@@ -15,11 +26,10 @@ export class UserEmailsService {
     const verificationUrl = `${urlBase}${verifyPath}?u=${verification.user.uuid}&v=${verification.id}`;
     await this.mailer.sendMail({
       to: verification.user.email,
-      subject: `Welcome to ${appName}`,
-      template: './welcome',
+      subject: `Verify email for ${appName}`,
+      template: './emailverification',
       context: {
         appName,
-        username: verification.user.username,
         verificationUrl,
       },
     });
