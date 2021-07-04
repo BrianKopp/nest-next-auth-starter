@@ -10,7 +10,7 @@ import { PasswordNotMeetCriteriaError } from '../errors/password-not-meet-criter
 export class AuthService {
   constructor(private users: UserService) {}
 
-  async validateUser(username: string, password: string): Promise<any> {
+  async validateUser(username: string, password: string): Promise<number> {
     let user: User;
     try {
       user = await this.users.getUser(username);
