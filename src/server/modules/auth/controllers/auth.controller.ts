@@ -39,8 +39,21 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(200)
-  async register(@Body() registerDto: RegisterDTO) {
-    await this.authService.registerUser(registerDto);
+  async register(@Req() req: Request, @Body() registerDto: RegisterDTO) {
+    const user = await this.authService.registerUser(registerDto);
+    try {
+      await new Promise<void>((resolve, reject) => {
+        req.logIn(user.id, (err) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve();
+        });
+      });
+    } catch (err) {
+      console.error('error logging user in', user, err);
+    }
   }
 
   @Get('verify')
