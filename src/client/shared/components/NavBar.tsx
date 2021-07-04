@@ -42,7 +42,7 @@ const NavBar = ({ loggedIn }: Props): JSX.Element => {
             My App
           </Typography>
           {!loggedIn && (
-            <Button color="inherit" href="/login">
+            <Button color="inherit" href="/user/login">
               Login
             </Button>
           )}

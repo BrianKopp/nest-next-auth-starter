@@ -1,10 +1,10 @@
 import React, { useRef, useState } from 'react';
 import Router from 'next/router';
 import { Button, Card, CardContent, CardHeader, makeStyles, TextField } from '@material-ui/core';
-import { getLoggedOutUserServerSideProps } from '../shared/utils/get-logged-in-user';
-import NavBar from '../shared/components/NavBar';
+import { getLoggedOutUserServerSideProps } from '../../shared/utils/get-logged-in-user';
+import NavBar from '../../shared/components/NavBar';
 import { Controller, useForm } from 'react-hook-form';
-import { PasswordRequirementRegexes } from '../../shared';
+import { PasswordRequirementRegexes } from '../../../shared';
 
 export const getServerSideProps = async function (context) {
   return getLoggedOutUserServerSideProps(context);

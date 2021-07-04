@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
 import { Button, Card, CardContent, CardHeader, makeStyles, TextField } from '@material-ui/core';
-import { getLoggedOutUserServerSideProps } from '../shared/utils/get-logged-in-user';
-import NavBar from '../shared/components/NavBar';
+import { getLoggedOutUserServerSideProps } from '../../shared/utils/get-logged-in-user';
+import NavBar from '../../shared/components/NavBar';
 import { useForm } from 'react-hook-form';
 
 export const getServerSideProps = async function (context) {
@@ -11,6 +11,7 @@ export const getServerSideProps = async function (context) {
 
 interface FormData {
   username: string;
+  password: string;
 }
 
 const useStyles = makeStyles(() => ({
@@ -20,16 +21,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const PasswordReset = (): JSX.Element => {
+const Login = (): JSX.Element => {
   const classes = useStyles();
   const [disabled, setDisabled] = useState(false);
   const { handleSubmit, register } = useForm<FormData>();
-  const [userNotFound, setUserNotFound] = useState(false);
-  const [showInstructions, setShowInstructions] = useState(false);
 
-  const onClickForgotPassword = (data) => {
+  const onClickLogin = (data) => {
     setDisabled(true);
-    fetch('/api/v1/auth/password-reset', {
+    fetch('/api/v1/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -37,23 +36,21 @@ const PasswordReset = (): JSX.Element => {
       body: JSON.stringify(data),
     })
       .then((response) => {
-        if (response.status === 404) {
-          throw new Error('user not found');
+        if (response.status === 401) {
+          throw new Error('error logging in');
         }
         if (response.status !== 200) {
           console.error('unexpected non 200 response', response.status, response.statusText);
-          throw new Error('unexpected error');
+          throw new Error('error logging in');
         }
         return response.json();
       })
       .then((respJson) => {
-        console.log('successfully sent password reset email!', respJson);
-        setShowInstructions(true);
-        setUserNotFound(false);
+        console.log('successfully logged in!', respJson);
+        Router.push('/');
       })
       .catch((err) => {
-        console.error('an error occurred sending password reset', err);
-        setUserNotFound(true);
+        console.error('an error occurred in login', err);
         setDisabled(false);
       });
   };
@@ -62,9 +59,9 @@ const PasswordReset = (): JSX.Element => {
       <NavBar />
       <div className="flex flexcolumn aligncenter mt16">
         <Card raised className="p8">
-          <CardHeader title="Forgot Password"></CardHeader>
+          <CardHeader title="Login"></CardHeader>
           <CardContent className={classes.card}>
-            <form noValidate onSubmit={handleSubmit(onClickForgotPassword)}>
+            <form noValidate onSubmit={handleSubmit(onClickLogin)}>
               <div>
                 <TextField
                   required
@@ -79,16 +76,34 @@ const PasswordReset = (): JSX.Element => {
                   autoFocus
                 />
               </div>
-              <div className="flex flexcolumn mt32">
+              <div className="mt8">
+                <TextField
+                  required
+                  fullWidth
+                  disabled={disabled}
+                  {...register('password')}
+                  className="mt16"
+                  id="password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                  autoComplete="current-password"
+                />
+              </div>
+              <div className="flex flexcolumn mt16">
                 <div className="flex jc">
                   <Button type="submit" variant="contained" color="primary" disabled={disabled}>
-                    Reset Password
+                    Login
                   </Button>
+                </div>
+                <div className="mt16 flex jc">
+                  <a href="/user/register">Register new account</a>
+                </div>
+                <div className="mt8 flex jc">
+                  <a href="/user/password-reset-request">Forgot password?</a>
                 </div>
               </div>
             </form>
-            {userNotFound && <p>User not found</p>}
-            {showInstructions && <p>A password reset link has been sent to the email.</p>}
           </CardContent>
         </Card>
       </div>
@@ -96,4 +111,4 @@ const PasswordReset = (): JSX.Element => {
   );
 };
 
-export default PasswordReset;
+export default Login;
