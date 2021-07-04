@@ -173,7 +173,7 @@ const Register = (): JSX.Element => {
                   </Button>
                 </div>
                 <div className="mt16 flex jc">
-                  <a href="/login">Login to existing account</a>
+                  <a href="/user/login">Login to existing account</a>
                 </div>
               </div>
             </form>
