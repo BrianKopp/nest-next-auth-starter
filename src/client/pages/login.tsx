@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  makeStyles,
-  TextField,
-  Theme,
-} from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, makeStyles, TextField } from '@material-ui/core';
 import { getLoggedOutUserServerSideProps } from '../shared/utils/get-logged-in-user';
 import NavBar from '../shared/components/NavBar';
 import { useForm } from 'react-hook-form';
@@ -22,7 +14,7 @@ interface FormData {
   password: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   card: {
     paddingTop: 0,
     maxWidth: '400px',

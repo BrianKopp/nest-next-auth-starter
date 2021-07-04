@@ -1,18 +1,10 @@
 import React, { useRef, useState } from 'react';
 import Router from 'next/router';
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  makeStyles,
-  TextField,
-  Theme,
-} from '@material-ui/core';
+import { Button, Card, CardContent, CardHeader, makeStyles, TextField } from '@material-ui/core';
 import { getLoggedOutUserServerSideProps } from '../shared/utils/get-logged-in-user';
 import NavBar from '../shared/components/NavBar';
 import { Controller, useForm } from 'react-hook-form';
-import { PasswordRequirementRegexes, PasswordRequirements } from '../../shared';
+import { PasswordRequirementRegexes } from '../../shared';
 
 export const getServerSideProps = async function (context) {
   return getLoggedOutUserServerSideProps(context);
@@ -24,7 +16,7 @@ interface FormData {
   confirmPassword: string;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   card: {
     paddingTop: 0,
     maxWidth: '400px',
