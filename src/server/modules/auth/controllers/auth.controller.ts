@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { RegisterDTO, PasswordResetDTO } from '../../../dtos';
 import { UserService } from '../../user/services/user.service';
+import { AuthenticatedGuard } from '../guards/authenticated.guard';
 import { LocalAuthGuard } from '../guards/local.guard';
 import { AuthService } from '../services/auth.service';
 
@@ -35,6 +36,14 @@ export class AuthController {
   @HttpCode(200)
   async login(@Req() req: Request) {
     return req.user;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Post('logout')
+  @HttpCode(200)
+  async logout(@Req() req: Request) {
+    req.logOut();
+    return { message: 'logged out' };
   }
 
   @Post('register')
