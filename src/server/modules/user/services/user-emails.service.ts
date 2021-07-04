@@ -27,9 +27,11 @@ export class UserEmailsService {
 
   async sendPasswordReset(reset: UserPasswordReset): Promise<void> {
     const urlBase = this.config.get('URL_BASE');
-    const passwordResetPath = '/password-reset';
+    const passwordResetPath = '/user/password-reset';
     const appName = this.config.get('APP_NAME');
-    const resetUrl = `${urlBase}${passwordResetPath}?u=${reset.user.uuid}&v=${reset.id}`;
+    const resetUrl = `${urlBase}${passwordResetPath}?u=${reset.user.uuid}&r=${reset.id}`;
+    const passwordResetCancelPath = '/user/password-reset-cancel';
+    const resetCancelUrl = `${urlBase}${passwordResetCancelPath}?u=${reset.user.uuid}&r=${reset.id}`;
     await this.mailer.sendMail({
       to: reset.user.email,
       subject: `Reset password for ${appName}`,
@@ -38,6 +40,7 @@ export class UserEmailsService {
         appName,
         username: reset.user.username,
         resetUrl,
+        resetCancelUrl,
       },
     });
   }
