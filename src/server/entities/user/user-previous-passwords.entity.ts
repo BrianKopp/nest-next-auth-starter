@@ -2,11 +2,11 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 import { User } from './user.entity';
 
 @Entity()
-export class UserPasswordHistory {
+export class UserPreviousPasswords {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.oldPasswords, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (u) => u.previousPasswords)
   user: User;
 
   @Column()

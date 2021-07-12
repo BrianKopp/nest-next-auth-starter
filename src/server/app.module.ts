@@ -11,6 +11,7 @@ import { UserPasswordHistory } from './entities/user-password-history.entity';
 import { UserEmailVerification } from './entities/user-email-verification.entity';
 import { UserPasswordReset } from './entities/user-password-reset.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PasswordsController } from './module/user/controllers/passwords.controller';
 
 @Module({
   imports: [
@@ -66,7 +67,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     AuthModule,
     ViewsModule,
   ],
-  controllers: [],
+  controllers: [PasswordsController],
   providers: [],
 })
 export class AppModule {}
